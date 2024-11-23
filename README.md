@@ -26,3 +26,10 @@ This project is an ongoing initiative, and we encourage contributions from the c
 - Harbor
 - Keycloack
 - DefectDojo
+
+
+## Install
+
+```bash
+root@devsecops:/etc/apt# apt install sudo git docker.io docker-compose
+```
