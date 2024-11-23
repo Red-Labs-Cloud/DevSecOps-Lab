@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    hostname: gitlab.redlabs.local
+    ports:
+      - "80:80"
+      - "443:443"
+      - "2222:22"
+    volumes:
+      - ./gitlab/config:/etc/gitlab
+      - ./gitlab/logs:/var/log/gitlab
+      - ./gitlab/data:/var/opt/gitlab
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://gitlab.redlabs.local' 1 
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
+
+  harbor:
+    image: goharbor/harbor-ce:latest
+    hostname: harbor.redlabs.local
+    ports:
+      - "8080:80"
+      - "4443:443"
+    volumes:
+      - ./harbor/data:/data
+    environment:
+      HARBOR_ADMIN_PASSWORD: "YourStrongPassword"
+
+  keycloak:
+    image: jboss/keycloak:latest
+    hostname: keycloak.redlabs.local
+    ports:
+      - "8081:8080"
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - DB_VENDOR=h2
+      - KEYCLOAK_IMPORT=/tmp/realm-export.json
+    volumes:
+      - ./keycloak/realm-export.json:/tmp/realm-export.json
+
+  defectdojo:
+    image: defectdojo/defectdojo:latest
+    hostname: defectdojo.redlabs.local
+    ports:
+      - "8082:80"
+    volumes:
+      - ./defectdojo/data:/data
+    environment:
+      - DJANGO_DEBUG=False
+      - ALLOWED_HOSTS=localhost,127.0.0.1,defectdojo.redlabs.local
+      - SECRET_KEY=YourSecretKey
+      - DJANGO_SETTINGS_MODULE=dojo.settings
+
+networks:
+  default:
+    external:
+      name: redlabs-network
