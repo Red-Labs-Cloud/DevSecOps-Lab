@@ -1,16 +1,3 @@
-
-
-
-
-apt update -y
-apt install sudo git docker.io docker-compose apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-docker network create redlabs-network
-docker-compose up -d --quiet-pull
-
-
-
-
-
 destroy(){
     sudo docker ps --format "table {{.Names}}\t{{.Ports}}\t{{.Status}}"
     # Stop All Conteinrs
@@ -20,3 +7,5 @@ destroy(){
     # Remove all container images
     sudo docker rmi $(sudo docker images -q) 
 }
+
+destroy
