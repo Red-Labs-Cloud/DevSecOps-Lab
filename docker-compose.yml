@@ -17,17 +17,6 @@ services:
         external_url 'http://gitlab.redlabs.local' 1 
         gitlab_rails['gitlab_shell_ssh_port'] = 2222
 
-  harbor:
-    image: bitnami/harbor-core:latest
-    hostname: harbor.redlabs.local
-    ports:
-      - "8080:80"
-      - "4443:443"
-    volumes:
-      - ./harbor/data:/data
-    environment:
-      HARBOR_ADMIN_PASSWORD: "YourStrongPassword"
-
   keycloak:
     image: keycloak/keycloak:latest
     hostname: keycloak.redlabs.local
@@ -53,6 +42,64 @@ services:
       - ALLOWED_HOSTS=localhost,127.0.0.1,defectdojo.redlabs.local
       - SECRET_KEY=YourSecretKey
       - DJANGO_SETTINGS_MODULE=dojo.settings
+
+  goharbor-db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: goharbor
+      POSTGRES_PASSWORD: goharbor_db_password
+      POSTGRES_DB: goharbor
+    volumes:
+      - ./goharbor-db/data:/var/lib/postgresql/data
+
+  goharbor-core:
+    image: goharbor/harbor-core:v2.8.0
+    restart: always
+    depends_on:
+      - goharbor-db
+    environment:
+      HARBOR_ADMIN_PASSWORD: Harbor12345
+      POSTGRESQL_HOST: goharbor-db
+      POSTGRESQL_PORT: 5432
+      POSTGRESQL_DATABASE: goharbor
+      POSTGRESQL_USERNAME: goharbor
+      POSTGRESQL_PASSWORD: goharbor_db_password
+    volumes:
+      - ./goharbor-core/config:/etc/core
+      - ./goharbor-core/common/config:/common/config
+
+  goharbor-portal:
+    image: goharbor/harbor-portal:v2.8.0
+    restart: always
+    depends_on:
+      - goharbor-core
+    environment:
+      CORE_SECRET: goharbor_core_secret
+    volumes:
+      - ./goharbor-portal/config:/etc/portal
+
+  goharbor-jobservice:
+    image: goharbor/harbor-jobservice:v2.8.0
+    restart: always
+    depends_on:
+      - goharbor-core
+    environment:
+      CORE_SECRET: goharbor_core_secret
+      REDIS_HOST: goharbor-redis
+      REDIS_PASSWORD: ""
+    volumes:
+      - ./goharbor-jobservice/config:/etc/jobservice
+
+  goharbor-redis:
+    image: redis:alpine
+    restart: always
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./goharbor-redis/data:/data
+      - ./goharbor-redis/redis.conf:/usr/local/etc/redis/redis.conf
+
+
 
 networks:
   default:
