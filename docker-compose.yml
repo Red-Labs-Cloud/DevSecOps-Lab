@@ -18,7 +18,7 @@ services:
         gitlab_rails['gitlab_shell_ssh_port'] = 2222
 
   harbor:
-    image: goharbor/harbor-ce:latest
+    image: bitnami/harbor-core:latest
     hostname: harbor.redlabs.local
     ports:
       - "8080:80"
@@ -29,7 +29,7 @@ services:
       HARBOR_ADMIN_PASSWORD: "YourStrongPassword"
 
   keycloak:
-    image: jboss/keycloak:latest
+    image: keycloak/keycloak:latest
     hostname: keycloak.redlabs.local
     ports:
       - "8081:8080"

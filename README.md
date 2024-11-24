@@ -30,6 +30,11 @@ This project is an ongoing initiative, and we encourage contributions from the c
 
 ## Install
 
+
 ```bash
-root@devsecops:/etc/apt# apt install sudo git docker.io docker-compose
+rfs@devsecops:~/DevSecOps_Lab$ sudo chmod +x install.sh
+```
+
+```bash
+rfs@devsecops:~/DevSecOps_Lab$ sudo ./install.sh
 ```
