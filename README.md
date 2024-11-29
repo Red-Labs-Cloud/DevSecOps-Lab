@@ -1,5 +1,9 @@
 # DevSecOps-Lab
-This repository houses the Red Labs Cloud DevSecOps Lab, a dynamic and evolving project designed to showcase and implement best practices in DevSecOps. The lab serves as a practical environment for learning, experimenting, and demonstrating the integration of security into every stage of the software development lifecycle.
+This repository houses the Red Labs Cloud DevSecOps Lab, a dynamic and evolving project designed to showcase and implement best practices in DevSecOps. 
+
+![DevSecOps-Lab](https://github.com/user-attachments/assets/483df771-e2f8-496f-8141-479e1ca08c86)
+
+The lab serves as a practical environment for learning, experimenting, and demonstrating the integration of security into every stage of the software development lifecycle.
 
 
 ## Key Objectives
